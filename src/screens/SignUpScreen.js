@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { View, StyleSheet, Dimensions, SafeAreaView, Pressable, Text, ScrollView, StatusBar } from 'react-native';
 import Custominput from '../components/CustomInput';
 import Svg from 'react-native-svg-uri';
 import Custombutton from '../components/CustomButton';
-const { width, height } = Dimensions.get('screen');
-
+import { useFormik } from 'formik';
 const Signupscreen = ({ navigation }) => {
 	return (
 		<SafeAreaView

@@ -1,21 +1,46 @@
 import React, { useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { View, StyleSheet, SafeAreaView, Pressable, Text, ScrollView, StatusBar } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Pressable, Text, ScrollView, StatusBar, Platform } from 'react-native';
 import Custominput from '../components/CustomInput';
 import Svg from 'react-native-svg-uri';
 import Custombutton from '../components/CustomButton';
+import Customalert from '../components/CustomAlert';
+const API_URL = Platform.OS === 'ios' ? 'http://localhost:5000/api' : 'http://10.0.2.2:5000/api';
 
 const Loginscreen = ({ navigation }) => {
 	const [ email, setEmail ] = useState('');
 	const [ password, setPassword ] = useState('');
-
+	const [ message, setMessage ] = useState('');
+	const [ alertTitle, setAlertTitle ] = useState('');
+	const [ token, setToken ] = useState('');
+	const [ showAlert, setShowAlert ] = useState(false);
+	const [ alertColor, setAlertColor ] = useState('');
 	const handleLogin = async () => {
-		fetch('http://localhost:5000/api/users/login', {
+		fetch(`${API_URL}/users/login`, {
 			method: 'POST',
-			body: { email: 'ali99yasin@gmail.com', password: 'Ali123ALi123' }
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ email, password })
 		})
-			.then((response) => console.log(response))
-			.catch((err) => console.error(err.message));
+			.then(async (res) => {
+				try {
+					const resJson = await res.json();
+					if (res.status !== 200) {
+						setAlertTitle('Failure 😭 !');
+						setMessage('Incorrect Email or Password ');
+						setShowAlert(true);
+						setAlertColor('#FF3341');
+						return;
+					}
+					setAlertTitle('Success 🥳 !');
+					setMessage('Loggin in...');
+					setToken(resJson.token);
+					setShowAlert(true);
+					setAlertColor('#34a4ea');
+				} catch (error) {
+					console.log(error);
+				}
+			})
+			.catch((error) => console.error(error.message));
 	};
 	return (
 		<SafeAreaView
@@ -25,6 +50,13 @@ const Loginscreen = ({ navigation }) => {
 				paddingTop: hp('4.48%')
 			}}
 		>
+			<Customalert
+				backgroundColor={alertColor}
+				message={message}
+				title={alertTitle}
+				showAlert={showAlert}
+				setShowAlert={setShowAlert}
+			/>
 			<StatusBar hidden={true} />
 			<View style={{ width: wp('100%'), height: '100%' }}>
 				<ScrollView showsVerticalScrollIndicator={false}>

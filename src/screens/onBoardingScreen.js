@@ -39,7 +39,7 @@ const OnBoardingScreen = ({ navigation }) => {
 							borderRadius={wp('1.27%')}
 							alignItems="center"
 							justifyContent="center"
-							onPress={() => navigation.navigate('LoginScreen')}
+							onPress={() => navigation.navigate('SignUpScreen')}
 							title="SIGN UP"
 							textColor="#3500E8"
 							fontSize={hp('1.80%')}

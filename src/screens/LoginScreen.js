@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { View, StyleSheet, SafeAreaView, Pressable, Text, ScrollView, StatusBar, Platform } from 'react-native';
+import {
+	View,
+	StyleSheet,
+	SafeAreaView,
+	Pressable,
+	Text,
+	ScrollView,
+	StatusBar,
+	KeyboardAvoidingView
+} from 'react-native';
 import Custominput from '../components/CustomInput';
 import Svg from 'react-native-svg-uri';
 import Custombutton from '../components/CustomButton';
 import Customalert from '../components/CustomAlert';
-const API_URL = Platform.OS === 'ios' ? 'http://localhost:5000/api' : 'http://10.0.2.2:5000/api';
 
-const Loginscreen = ({ navigation }) => {
+const Loginscreen = ({ navigation, API_URL }) => {
 	const [ email, setEmail ] = useState('');
 	const [ password, setPassword ] = useState('');
 	const [ message, setMessage ] = useState('');
@@ -16,6 +24,13 @@ const Loginscreen = ({ navigation }) => {
 	const [ showAlert, setShowAlert ] = useState(false);
 	const [ alertColor, setAlertColor ] = useState('');
 	const handleLogin = async () => {
+		if (password === '' || email === '') {
+			setAlertTitle('Warning ⚠️ !');
+			setMessage('Email or Passowrd fields cannot be empty');
+			setShowAlert(true);
+			setAlertColor('#F2C335');
+			return;
+		}
 		fetch(`${API_URL}/users/login`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -43,12 +58,10 @@ const Loginscreen = ({ navigation }) => {
 			.catch((error) => console.error(error.message));
 	};
 	return (
-		<SafeAreaView
-			style={{
-				width: wp('100%'),
-				height: hp('100%'),
-				paddingTop: hp('4.48%')
-			}}
+		<KeyboardAvoidingView
+			keyboardVerticalOffset={50}
+			behavior={'padding'}
+			style={{ flex: 1, paddingHorizontal: wp('3.9%'), paddingVertical: hp('6%'), alignItems: 'center' }}
 		>
 			<Customalert
 				backgroundColor={alertColor}
@@ -114,7 +127,7 @@ const Loginscreen = ({ navigation }) => {
 								fontWeight="bold"
 								marginVertical={hp('2.2%')}
 							/>
-							<Pressable onPress={() => console.log('Forgot Password')}>
+							<Pressable onPress={() => navigation.navigate('ForgotPasswordScreen')}>
 								<Text style={styles.forgotPassword}>Forgot Password?</Text>
 							</Pressable>
 						</View>
@@ -148,7 +161,7 @@ const Loginscreen = ({ navigation }) => {
 					</View>
 				</ScrollView>
 			</View>
-		</SafeAreaView>
+		</KeyboardAvoidingView>
 	);
 };
 

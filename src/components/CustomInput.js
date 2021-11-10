@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, StyleSheet, TextInput, Platform } from 'react-native';
 
 const Custominput = ({
 	width,
 	height,
 	borderBottom,
 	fontSize,
+	borderWidth = 0,
 	fontFamily,
 	paddingHorizontal,
 	onChangeText,
@@ -14,16 +15,26 @@ const Custominput = ({
 	isPassword = false,
 	fontColor = '#000',
 	textAlignVertical,
-	value
+	value,
+	borderRadius,
+	textAlign = 'left',
+	keyboardType = 'default',
+	maxLength
 }) => {
 	return (
 		<TextInput
+			returnKeyType={'done'}
+			maxLength={maxLength}
+			keyboardType={keyboardType}
 			value={value}
 			placeholderTextColor={'grey'}
 			secureTextEntry={isPassword}
 			placeholder={placeHolder}
 			onChangeText={onChangeText}
 			style={{
+				borderRadius,
+				textAlign,
+				borderWidth,
 				textAlignVertical,
 				color: fontColor,
 				width,
@@ -37,7 +48,5 @@ const Custominput = ({
 		/>
 	);
 };
-
-const styles = StyleSheet.create({});
 
 export default Custominput;

@@ -35,9 +35,9 @@ const Customalert = ({
 	return (
 		<Animated.View
 			style={{
-				zIndex: opacity === 0 ? -1 : 6,
+				zIndex: 6,
 				position: 'absolute',
-				top: hp('6%'),
+				top: hp('10%'),
 				left: 0,
 				right: 0,
 				margin: hp('1.12%'),
@@ -52,7 +52,7 @@ const Customalert = ({
 				},
 				shadowOpacity: 0.15,
 				shadowRadius: hp('0.50%'),
-				elevation: opacity === 0 ? -1 : 6,
+				elevation: 6,
 				opacity,
 				transform: [
 					{

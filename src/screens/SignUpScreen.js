@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { View, StyleSheet, Dimensions, SafeAreaView, Pressable, Text, ScrollView, StatusBar } from 'react-native';
+import {
+	View,
+	StyleSheet,
+	Dimensions,
+	SafeAreaView,
+	Pressable,
+	Text,
+	ScrollView,
+	StatusBar,
+	KeyboardAvoidingView
+} from 'react-native';
 import Custominput from '../components/CustomInput';
 import Svg from 'react-native-svg-uri';
 import Custombutton from '../components/CustomButton';
 import { useFormik } from 'formik';
-const Signupscreen = ({ navigation }) => {
+const Signupscreen = ({ navigation, API_URL }) => {
 	return (
-		<SafeAreaView
-			style={{
-				width: wp('100%'),
-				height: hp('100%'),
-				paddingTop: hp('4.48%')
-			}}
+		<KeyboardAvoidingView
+			keyboardVerticalOffset={50}
+			behavior={'padding'}
+			style={{ flex: 1, paddingHorizontal: wp('3.9%'), paddingVertical: hp('6%'), alignItems: 'center' }}
 		>
 			<StatusBar hidden={true} />
 			<View style={{ width: wp('100%'), height: hp('100%') }}>
@@ -112,7 +120,7 @@ const Signupscreen = ({ navigation }) => {
 					</View>
 				</ScrollView>
 			</View>
-		</SafeAreaView>
+		</KeyboardAvoidingView>
 	);
 };
 

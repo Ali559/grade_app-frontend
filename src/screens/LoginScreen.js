@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import {
-	View,
-	StyleSheet,
-	SafeAreaView,
-	Pressable,
-	Text,
-	ScrollView,
-	StatusBar,
-	KeyboardAvoidingView
-} from 'react-native';
+import { View, StyleSheet, Pressable, Text, ScrollView, StatusBar, KeyboardAvoidingView } from 'react-native';
 import Custominput from '../components/CustomInput';
 import Svg from 'react-native-svg-uri';
 import Custombutton from '../components/CustomButton';
@@ -25,7 +16,7 @@ const Loginscreen = ({ navigation, API_URL }) => {
 	const [ alertColor, setAlertColor ] = useState('');
 	const handleLogin = async () => {
 		if (password === '' || email === '') {
-			setAlertTitle('Warning ⚠️ !');
+			setAlertTitle('Warning !');
 			setMessage('Email or Passowrd fields cannot be empty');
 			setShowAlert(true);
 			setAlertColor('#F2C335');
@@ -40,28 +31,36 @@ const Loginscreen = ({ navigation, API_URL }) => {
 				try {
 					const resJson = await res.json();
 					if (res.status !== 200) {
-						setAlertTitle('Failure 😭 !');
+						setAlertTitle('Failure !');
 						setMessage('Incorrect Email or Password ');
 						setShowAlert(true);
 						setAlertColor('#FF3341');
 						return;
 					}
-					setAlertTitle('Success 🥳 !');
+					setAlertTitle('Success !');
 					setMessage('Loggin in...');
 					setToken(resJson.token);
 					setShowAlert(true);
 					setAlertColor('#34a4ea');
 				} catch (error) {
-					console.log(error);
+					setAlertTitle('Failure !');
+					setMessage('You are not connected to the Internet');
+					setShowAlert(true);
+					setAlertColor('#FF3341');
 				}
 			})
-			.catch((error) => console.error(error.message));
+			.catch((error) => {
+				setAlertTitle('Failure !');
+				setMessage('You are not connected to the Internet');
+				setShowAlert(true);
+				setAlertColor('#FF3341');
+			});
 	};
 	return (
 		<KeyboardAvoidingView
 			keyboardVerticalOffset={50}
 			behavior={'padding'}
-			style={{ flex: 1, paddingHorizontal: wp('3.9%'), paddingVertical: hp('6%'), alignItems: 'center' }}
+			style={{ flex: 1, paddingHorizontal: wp('3.9%'), paddingVertical: hp('3%'), alignItems: 'center' }}
 		>
 			<Customalert
 				backgroundColor={alertColor}

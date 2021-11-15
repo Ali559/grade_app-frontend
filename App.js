@@ -9,10 +9,9 @@ import {
 	Codeverificationscreen,
 	Resetpasswordscreen
 } from './src/screens/screenLinks';
-import { useColorScheme } from 'react-native';
 
 const Stack = createNativeStackNavigator();
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+
 const API_URL = Platform.OS === 'ios' ? 'http://localhost:5000/api' : 'http://10.0.2.2:5000/api';
 
 const App = () => {

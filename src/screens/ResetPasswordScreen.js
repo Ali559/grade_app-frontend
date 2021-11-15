@@ -23,7 +23,7 @@ const Resetpasswordscreen = ({ navigation, API_URL }) => {
 			style={{
 				flex: 1,
 				paddingHorizontal: wp('3.9%'),
-				paddingVertical: hp('6%'),
+				paddingVertical: hp('3%'),
 				alignItems: 'center'
 			}}
 		>

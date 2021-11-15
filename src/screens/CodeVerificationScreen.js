@@ -20,7 +20,7 @@ const Codeverificationscreen = ({ navigation, API_URL }) => {
 		<KeyboardAvoidingView
 			keyboardVerticalOffset={50}
 			behavior={'padding'}
-			style={{ flex: 1, paddingHorizontal: wp('3.9%'), paddingVertical: hp('6%'), alignItems: 'center' }}
+			style={{ flex: 1, paddingHorizontal: wp('3.9%'), paddingVertical: hp('3%'), alignItems: 'center' }}
 		>
 			{/* <Customalert
 				backgroundColor={alertColor}

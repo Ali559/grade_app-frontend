@@ -1,27 +1,72 @@
 import React, { useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import {
-	View,
-	StyleSheet,
-	Dimensions,
-	SafeAreaView,
-	Pressable,
-	Text,
-	ScrollView,
-	StatusBar,
-	KeyboardAvoidingView
-} from 'react-native';
+import { View, StyleSheet, Pressable, Text, ScrollView, StatusBar, KeyboardAvoidingView } from 'react-native';
 import Custominput from '../components/CustomInput';
 import Svg from 'react-native-svg-uri';
 import Custombutton from '../components/CustomButton';
-import { useFormik } from 'formik';
+import Customalert from '../components/CustomAlert';
 const Signupscreen = ({ navigation, API_URL }) => {
+	const [ email, setEmail ] = useState('');
+	const [ password, setPassword ] = useState('');
+	const [ message, setMessage ] = useState('');
+	const [ alertTitle, setAlertTitle ] = useState('');
+	const [ showAlert, setShowAlert ] = useState(false);
+	const [ alertColor, setAlertColor ] = useState('');
+	const [ username, setUsername ] = useState('');
+	const handleSignup = async () => {
+		if ((password === '' || email === '', username === '')) {
+			setAlertTitle('Warning !');
+			setMessage('Please provide Username, Email and Password');
+			setShowAlert(true);
+			setAlertColor('#F2C335');
+			return;
+		}
+		fetch(`${API_URL}/users/signup`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ email, password, username })
+		})
+			.then(async (res) => {
+				try {
+					const resJson = await res.json();
+					if (res.status !== 200) {
+						setAlertTitle('Failure !');
+						setMessage(resJson.message);
+						setShowAlert(true);
+						setAlertColor('#FF3341');
+						return;
+					}
+					setAlertTitle('Success !');
+					setMessage(resJson.message);
+					setShowAlert(true);
+					setAlertColor('#34a4ea');
+				} catch (error) {
+					setAlertTitle('Failure !');
+					setMessage('You are not connected to the Internet');
+					setShowAlert(true);
+					setAlertColor('#FF3341');
+				}
+			})
+			.catch(() => {
+				setAlertTitle('Failure !');
+				setMessage('You are not connected to the Internet');
+				setShowAlert(true);
+				setAlertColor('#FF3341');
+			});
+	};
 	return (
 		<KeyboardAvoidingView
 			keyboardVerticalOffset={50}
 			behavior={'padding'}
 			style={{ flex: 1, paddingHorizontal: wp('3.9%'), paddingVertical: hp('3%'), alignItems: 'center' }}
 		>
+			<Customalert
+				backgroundColor={alertColor}
+				message={message}
+				title={alertTitle}
+				showAlert={showAlert}
+				setShowAlert={setShowAlert}
+			/>
 			<StatusBar hidden={true} />
 			<View style={{ width: wp('100%'), height: hp('100%') }}>
 				<ScrollView showsVerticalScrollIndicator={false}>
@@ -46,7 +91,7 @@ const Signupscreen = ({ navigation, API_URL }) => {
 							width={wp('66.66%')}
 							textAlignVertical={'bottom'}
 							placeHolder="John Doe"
-							onChangeText={(value) => console.log(value)}
+							onChangeText={(value) => setUsername((prev) => (prev = value))}
 							paddingHorizontal={wp('1%')}
 						/>
 						<Custominput
@@ -58,7 +103,7 @@ const Signupscreen = ({ navigation, API_URL }) => {
 							width={wp('66.66%')}
 							textAlignVertical={'bottom'}
 							placeHolder="johndoe@gmail.com"
-							onChangeText={(value) => console.log(value)}
+							onChangeText={(value) => setEmail((prev) => (prev = value))}
 							paddingHorizontal={wp('1%')}
 						/>
 						<Custominput
@@ -71,7 +116,7 @@ const Signupscreen = ({ navigation, API_URL }) => {
 							width={wp('66.66%')}
 							placeHolder="Password"
 							isPassword={true}
-							onChangeText={(value) => console.log(value)}
+							onChangeText={(value) => setPassword((prev) => (prev = value))}
 							paddingHorizontal={wp('1%')}
 						/>
 						<View style={styles.actionContainer}>
@@ -82,7 +127,7 @@ const Signupscreen = ({ navigation, API_URL }) => {
 								borderRadius={wp('1.27%')}
 								alignItems="center"
 								justifyContent="center"
-								onPress={() => console.log('Login')}
+								onPress={handleSignup}
 								title="SIGN UP"
 								textColor="#fff"
 								fontSize={hp('1.80%')}

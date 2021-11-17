@@ -77,7 +77,6 @@ const Customalert = ({
 			<Text
 				style={{
 					color: textColor,
-					lineHeight: hp('5%'),
 					marginLeft: wp('1%'),
 					fontFamily: 'K2D-Medium',
 					fontSize: hp('1.8%')

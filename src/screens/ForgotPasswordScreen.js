@@ -15,7 +15,6 @@ import Custominput from '../components/CustomInput';
 import Svg from 'react-native-svg-uri';
 import Custombutton from '../components/CustomButton';
 import Customalert from '../components/CustomAlert';
-
 const Forgotpasswordscreen = ({ navigation, API_URL }) => {
 	const [ alertColor, setAlertColor ] = useState('transparent');
 	const [ alertTitle, setAlertTitle ] = useState('');
@@ -24,7 +23,47 @@ const Forgotpasswordscreen = ({ navigation, API_URL }) => {
 	const [ email, setEmail ] = useState('');
 
 	const handleSendResetCode = async () => {
-		navigation.navigate('CodeVerificationScreen');
+		if (email === '') {
+			setAlertTitle('Warning !');
+			setMessage('The Email field cannot be empty');
+			setShowAlert(true);
+			setAlertColor('#F2C335');
+			return;
+		}
+		fetch(`${API_URL}/users/reset/send-reset-code`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+			body: JSON.stringify({ email })
+		})
+			.then(async (result) => {
+				try {
+					const data = await result.json();
+					const message = data.message;
+					if (result.status !== 200) {
+						setAlertTitle('Failure !');
+						setMessage(message);
+						setShowAlert(true);
+						setAlertColor('#FF3341');
+						return;
+					}
+					setAlertTitle('Success !');
+					setMessage(message);
+					setShowAlert(true);
+					setAlertColor('#34a4ea');
+					navigation.navigate('CodeVerificationScreen', { email });
+				} catch (error) {
+					setAlertTitle('Failure !');
+					setMessage(error.message);
+					setShowAlert(true);
+					setAlertColor('#FF3341');
+				}
+			})
+			.catch(() => {
+				setAlertTitle('Failure !');
+				setMessage('You are not connected to the Internet');
+				setShowAlert(true);
+				setAlertColor('#FF3341');
+			});
 	};
 	return (
 		<KeyboardAvoidingView

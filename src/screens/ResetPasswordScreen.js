@@ -15,7 +15,57 @@ import Svg from 'react-native-svg-uri';
 import Custombutton from '../components/CustomButton';
 import Customalert from '../components/CustomAlert';
 
-const Resetpasswordscreen = ({ navigation, API_URL }) => {
+const Resetpasswordscreen = ({ navigation, API_URL, route }) => {
+	const { email } = route.params;
+	const [ alertColor, setAlertColor ] = useState('transparent');
+	const [ alertTitle, setAlertTitle ] = useState('');
+	const [ showAlert, setShowAlert ] = useState(false);
+	const [ message, setMessage ] = useState('');
+	const [ password, setPassword ] = useState('');
+	const [ newPassword, setNewPassword ] = useState('');
+	const handleResetPassword = async () => {
+		if (password === '' || newPassword === '') {
+			setAlertTitle('Warning !');
+			setMessage('Please type the new password');
+			setShowAlert(true);
+			setAlertColor('#F2C335');
+			return;
+		}
+		fetch(`${API_URL}/users/reset/reset-password/${email}`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+			body: JSON.stringify({ password })
+		})
+			.then(async (result) => {
+				try {
+					const data = await result.json();
+					const message = data.message;
+					if (result.status !== 200) {
+						setAlertTitle('Failure !');
+						setMessage(message);
+						setShowAlert(true);
+						setAlertColor('#FF3341');
+						return;
+					}
+					setAlertTitle('Success !');
+					setMessage('Password Updated Successfully, going back to login screen');
+					setShowAlert(true);
+					setAlertColor('#34a4ea');
+					setTimeout(() => navigation.navigate('LoginScreen'), 2000);
+				} catch (error) {
+					setAlertTitle('Failure !');
+					setMessage(error.message);
+					setShowAlert(true);
+					setAlertColor('#FF3341');
+				}
+			})
+			.catch(() => {
+				setAlertTitle('Failure !');
+				setMessage('You are not connected to the Internet');
+				setShowAlert(true);
+				setAlertColor('#FF3341');
+			});
+	};
 	return (
 		<KeyboardAvoidingView
 			keyboardVerticalOffset={50}
@@ -27,13 +77,13 @@ const Resetpasswordscreen = ({ navigation, API_URL }) => {
 				alignItems: 'center'
 			}}
 		>
-			{/* <Customalert
+			<Customalert
 				backgroundColor={alertColor}
 				message={message}
 				title={alertTitle}
 				showAlert={showAlert}
 				setShowAlert={setShowAlert}
-			/> */}
+			/>
 			<StatusBar hidden={true} />
 			<View style={{ width: '100%', height: '100%' }}>
 				<ScrollView showsVerticalScrollIndicator={false}>
@@ -57,7 +107,7 @@ const Resetpasswordscreen = ({ navigation, API_URL }) => {
 									height={hp('5.8%')}
 									width={wp('70%')}
 									placeHolder="New Password"
-									onChangeText={(value) => console.log(value)}
+									onChangeText={(value) => setPassword((prev) => (prev = value))}
 									paddingHorizontal={wp('1%')}
 								/>
 								<Custominput
@@ -71,7 +121,7 @@ const Resetpasswordscreen = ({ navigation, API_URL }) => {
 									height={hp('5.8%')}
 									width={wp('70%')}
 									placeHolder="Confirm Password"
-									onChangeText={(value) => console.log(value)}
+									onChangeText={(value) => setNewPassword((prev) => (prev = value))}
 									paddingHorizontal={wp('1%')}
 								/>
 							</View>
@@ -82,7 +132,7 @@ const Resetpasswordscreen = ({ navigation, API_URL }) => {
 								borderRadius={wp('1.27%')}
 								alignItems="center"
 								justifyContent="center"
-								onPress={() => navigation.navigate('ResetPasswordScreen')}
+								onPress={handleResetPassword}
 								title="SUBMIT"
 								textColor="#fff"
 								fontSize={hp('2%')}

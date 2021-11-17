@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, Platform } from 'react-native';
+import {  TextInput } from 'react-native';
 
 const Custominput = ({
 	width,
